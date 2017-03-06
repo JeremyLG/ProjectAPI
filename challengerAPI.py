@@ -72,6 +72,6 @@ def getMatches(players,region, APIKey):
 
 # player = challengers[1]
 
-df1 = getMatches(challengers[0],region,APIKey)
+df1 = getMatches([challengers[0]],region,APIKey)
 
 pprint(df1)
