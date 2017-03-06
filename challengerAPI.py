@@ -70,8 +70,8 @@ def getMatches(players,region, APIKey):
             df.loc[len(df)] = [player,ids,ts,kills,deaths,assists,minionsKilled,matchDuration,totalKills]
     return df
 
-# player = "529027"
+# player = challengers[1]
 
-df1 = getMatches(['529027'],region,APIKey)
+df1 = getMatches(challengers[0],region,APIKey)
 
 pprint(df1)
