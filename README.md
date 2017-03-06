@@ -40,10 +40,10 @@ Si jamais c'est refusé, faudrait lancer l'API pendant 20h en soi pas pratique h
 
 ## Authors
 
-* **Pierre NODET** - *Project Manager* - [Pierre](https://github.com/PierreNodet)
+* **Clément FRANGER** - *Project Manager #A+Major* - [Clément](https://github.com/minifranger)
+
+* **Pierre NODET** - *Python Leader* - [Pierre](https://github.com/PierreNodet)
 
 * **Jérémy LE GALL** - *Riot's API Leader* - [Jérémy](https://github.com/JeremyLG)
 
 * **Sivasujiban SIVANANTHAM** - *Twitter's API Leader* - [Sylvain](https://github.com/Triples77)
-
-* **Clément FRANGER** - *A+ Major*
