@@ -1,0 +1,20 @@
+
+    digraph xtext {
+    fontname = "Bitstream Vera Sans"
+    fontsize = 8
+    node[
+        shape=record,
+        style=filled,
+        fillcolor=aliceblue
+    ]
+    nodesep = 0.3
+    edge[dir=black,arrowtail=empty]
+
+
+140331109474200 -> 140331109552704 [label="commands:0" arrowtail=diamond dir=both]
+140331109552704[label="{:TwitterCommand|+person:str='trump'\l}"]
+140331109474200 -> 140331109582496 [label="commands:1" arrowtail=diamond dir=both]
+140331109582496[label="{:RiotCommand|+region:str='lan'\l+rank:str='challenger'\l}"]
+140331109474200[label="{:Program|+function:str='correlate'\l}"]
+
+}

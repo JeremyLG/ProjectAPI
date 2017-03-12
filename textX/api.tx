@@ -1,0 +1,31 @@
+Program:
+  function=Function
+    commands*=Command
+;
+
+Command:
+  TwitterCommand | RiotCommand
+;
+
+TwitterCommand:
+  'twitter' person=STRING
+;
+
+RiotCommand:
+  'riot' region=Region ',' rank=Rank
+;
+
+Region:
+  "lan"|"euw"|"na"|"las"
+;
+
+Rank:
+  "challenger"|"master"
+;
+
+Function:
+  "correlate"|"basic"
+;
+Comment:
+  /\/\/.*$/
+;

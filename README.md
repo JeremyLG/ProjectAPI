@@ -16,6 +16,7 @@ Le projet a été codé en Python 3.5 sous l'éditeur Atom.io
 
 ```
 pip3 install pprint
+pip3 install requests_oauthlib
 ```
 
 ## Conditions

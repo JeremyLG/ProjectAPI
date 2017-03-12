@@ -1,0 +1,54 @@
+
+    digraph xtext {
+    fontname = "Bitstream Vera Sans"
+    fontsize = 8
+    node[
+        shape=record,
+        style=filled,
+        fillcolor=aliceblue
+    ]
+    nodesep = 0.3
+    edge[dir=black,arrowtail=empty]
+
+
+29701848[ label="{Comment|\\/\\/.*$}"]
+
+29684808[ label="{*Command|}"]
+29684808 -> 29686680 [dir=back]
+29684808 -> 29688552 [dir=back]
+
+29690424[ label="{Region|lan\|euw\|na\|las}"]
+
+29682936 -> 29684808[arrowtail=diamond, dir=both, headlabel="commands 0..*"]
+29682936[ label="{Program|+function:Function\l}"]
+
+29688552[ label="{RiotCommand|+region:Region\l+rank:Rank\l}"]
+
+29693352[ label="{Rank|challenger\|master}"]
+
+29697624[ label="{Function|correlate\|basic}"]
+
+29686680[ label="{TwitterCommand|+person:STRING\l}"]
+
+29466216[ label="{INT|}"]
+
+29472072[ label="{NUMBER|}"]
+29472072 -> 29469144 [dir=back]
+29472072 -> 29466216 [dir=back]
+
+29460648[ label="{STRING|}"]
+
+29469144[ label="{FLOAT|}"]
+
+29457624[ label="{ID|}"]
+
+29463432[ label="{BOOL|}"]
+
+29475480[ label="{BASETYPE|}"]
+29475480 -> 29472072 [dir=back]
+29475480 -> 29463432 [dir=back]
+29475480 -> 29457624 [dir=back]
+29475480 -> 29460648 [dir=back]
+
+
+}
