@@ -6,16 +6,22 @@ from urllib.parse import parse_qs
 from pprint import pprint
 import pandas as pd
 from datetime import datetime
+from find_dir import cmd_folder
+
+pd.options.mode.chained_assignment = None
+
+with open(cmd_folder+"config.yml", 'r') as ymlfile:
+    cfg = yaml.load(ymlfile)
 
 REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
 AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize?oauth_token="
 ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token"
 
-CONSUMER_KEY = "arXBkovNBKIoHkSgrH8N1Fxxhp"
-CONSUMER_SECRET = "aNKyqvhqFZLKELAyYhKAKQBvZWNj21hvaH8czkzVKWOs4ZE0Ewc"
+CONSUMER_KEY = cfg['CONSUMER_KEY']
+CONSUMER_SECRET = cfg['CONSUMER_SECRET']
 
-OAUTH_TOKEN = "a840963180868358144-C58nejMrIngcWXHm1wtalnkbmB0CxGr"
-OAUTH_TOKEN_SECRET = "ap1Q3zi1mhkCzr2lpPRzo858G8ldtG0QMToLtkCfltSkU6"
+OAUTH_TOKEN = cfg['OAUTH_TOKEN']
+OAUTH_TOKEN_SECRET = cfg['OAUTH_TOKEN_SECRET']
 
 def get_oauth():
     oauth = OAuth1(CONSUMER_KEY,
@@ -32,7 +38,6 @@ def get_tweets(name,nbr):
                 url = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name="+name+"&count="+str(200)
             else:
                 url = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name="+name+"&count="+str(200)+"&max_id="+str(max_id)
-                print(url)
             response = requests.get(url = url, auth=oauth)
             responseJSON  = response.json()
             for i in range(len(responseJSON)):
@@ -42,16 +47,14 @@ def get_tweets(name,nbr):
                 rt = responseJSON[i]['retweet_count']
                 data.loc[len(data)] = [ts,fav,rt,txt]
             max_id = responseJSON[199]['id']
+        for i in range(len(data)):
+            data.timestamp[i] = datetime.strptime(data.timestamp[i], '%a %b %d %H:%M:%S %z %Y')
+            data.timestamp[i] = int(data.timestamp[i].timestamp())
         # data['created_at'] =  pd.to_datetime(data['created_at'], format='%a %b %d %H:%M:%S %z %Y')
         return data
 
-data = get_tweets("realDonaldTrump",3)
-data
-data[data['text'].str.contains("Mex")]
-
-
-for i in range(len(data)):
-    if i >= 3:
-        data.timestamp[i] = datetime.strptime(data.timestamp[i], '%a %b %d %H:%M:%S %z %Y')
-        data.timestamp[i] = int(data.timestamp[i].timestamp())
-data.to_csv('./csv/tweets.csv')
+if __name__ =="__main__":
+    data = get_tweets("realDonaldTrump",3)
+    data
+    data[data['text'].str.contains("Mex")]
+    data.to_csv(cmd_folder+'csv/tweets.csv')
