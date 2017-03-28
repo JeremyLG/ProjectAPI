@@ -1,8 +1,7 @@
 from textx.metamodel import metamodel_from_file
 from find_dir import cmd_folder
-from apis.twitter import get_tweets
-from apis.challengerAPI import getIDS,getMatches
-import yaml
+from twitter import get_tweets
+from challengerAPI import getIDS,getMatches
 import pandas as pd
 
 api_meta = metamodel_from_file(cmd_folder+'textX/api.tx', autokwd=True)
@@ -31,19 +30,22 @@ class Api(object):
         if c.__class__.__name__ == "TwitterCommand":
             print("Check des tweets de : {}".format(c.person))
             self.person = c.person
-            data = get_tweets(self.person,2)
-            print(data[data.text.str.contains("Mex")])
         else:
             print("Going to {} for {} players.".format(c.region,c.rank))
             self.rank = c.rank
             self.region = c.region
-            players = getIDS(self.rank,self.region)
-            match = getMatches(players[0],self.region)
-
-    if model.function == "correlate":
-
-
     print(self)
+
+  def run(self):
+        tweets = get_tweets(self.person,2)
+        if self.person == "realDonaldTrump":
+            ts = tweets.timestamp[tweets.text.str.contains("Mex")]
+            print(ts)
+        players = getIDS(self.rank,self.region)
+        dfAP = pd.DataFrame(columns = ['playerID','matchID','timestamp','kills','deaths','assists','minionsKilled','matchDuration','totalKills'])
+        dfAV = pd.DataFrame(columns = ['playerID','matchID','timestamp','kills','deaths','assists','minionsKilled','matchDuration','totalKills'])
+        dfAV,dfAP = getMatches(players[0],self.region)
 
 api = Api()
 api.interpret(example_api_model)
+api.run()
