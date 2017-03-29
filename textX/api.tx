@@ -16,7 +16,7 @@ RiotCommand:
 ;
 
 Region:
-  "lan"|"euw"|"na"|"las"
+  "lan"|"euw"|"na"|"las"|"eune"
 ;
 
 Rank:

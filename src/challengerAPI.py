@@ -16,6 +16,7 @@ def getIDS(rank,region):
     URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.5/league/"+rank+"?type=RANKED_SOLO_5x5&api_key=" + APIKey
     #requests.get is a function given to us my our import "requests". It basically goes to the URL we made and gives us back a JSON.
     response = requests.get(URL)
+    time.sleep(2)
     #Here I return the JSON we just got.
     # #Once again, what requestData returns is a JSON.
     responseJSON  = response.json()
@@ -39,64 +40,76 @@ def checkPartId(req,ids):
         i+=1
     return i-1
 
-def getMatches(players,region,dfAV,dfAP,tst):
+def getMatches(players,region,dfAV,dfAP,tstt):
     #Here is how I make my URL.  There are many ways to create these.
     compteur = 0
-    t = time.time()
+    # t = time.time()
     for player in players:
-        if compteur%9 == 0:
-            time.sleep(max(0,round(15-time.time()+t)))
-            t = time.time()
-        URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/"+player+"?rankedQueues=TEAM_BUILDER_RANKED_SOLO&beginTime=1481108400000&api_key=" + APIKey
-    #requests.get is a function given to us my our import "requests". It basically goes to the URL we made and gives us back a JSON.
+        # if compteur%9 == 0:
+        #     print(compteur)
+        #     time.sleep(max(0,round(15-time.time()+t)))
+        #     # time.sleep(10)
+        #     t = time.time()
+        URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/"+player+"?rankedQueues=TEAM_BUILDER_RANKED_SOLO&api_key=" + APIKey
+    #requests.get is a function given to us my our import "requests". It basically goes to the URL we made and gives us back a JSON.&beginTime=1481108400000
         response = requests.get(URL)
         compteur +=1
+        time.sleep(2)
     #Here I return the JSON we just got.
     # #Once again, what requestData returns is a JSON.
         responseJSON  = response.json()
+        print("Joueur trouvé : " + player)
+        print(str(compteur) + "ième requête effectuée")
         # for i in range(len(responseJSON['matches'])):
         # for i in range(10):
-
-        i = 0
-        ts = responseJSON['matches'][i]['timestamp']/1000
-        while ts > tst:
-            i+=1
+        for tst in tstt:
+            i = 0
             ts = responseJSON['matches'][i]['timestamp']/1000
+            while ((ts > tst)&(i < len(responseJSON['matches'])-1)):
+                i+=1
+                ts = responseJSON['matches'][i]['timestamp']/1000
 
-        ids = str(responseJSON['matches'][i]['matchId'])
-        ts = str(responseJSON['matches'][i]['timestamp'])
-        URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/match/"+ids+"?api_key=" + APIKey
-        response = requests.get(URL)
-        responseJSON2  = response.json()
-        partID = checkPartId(responseJSON2,player)
-        assists = responseJSON2['participants'][partID]['stats']['assists']
-        kills = responseJSON2['participants'][partID]['stats']['kills']
-        deaths = responseJSON2['participants'][partID]['stats']['deaths']
-        minionsKilled = responseJSON2['participants'][partID]['stats']['minionsKilled']
-        assists = responseJSON2['participants'][partID]['stats']['assists']
-        matchDuration = responseJSON2['matchDuration']
-        totalKills = 0
-        for j in range(10):
-            totalKills += responseJSON2['participants'][j]['stats']['kills']
-        dfAV.loc[len(dfAV)] = [player,ids,ts,kills,deaths,assists,minionsKilled,matchDuration,totalKills]
+            if i == len(responseJSON['matches'])-1:
+                print("Pas de données de matches au moment du twet")
+            else:
+                ids = str(responseJSON['matches'][i]['matchId'])
+                ts = str(responseJSON['matches'][i]['timestamp'])
+                URL = "https://" + region + ".api.riotgames.com/api/lol/" + region + "/v2.2/match/"+ids+"?api_key=" + APIKey
+                response = requests.get(URL)
+                compteur +=1
+                time.sleep(2)
+                responseJSON2  = response.json()
+                partID = checkPartId(responseJSON2,player)
+                assists = responseJSON2['participants'][partID]['stats']['assists']
+                kills = responseJSON2['participants'][partID]['stats']['kills']
+                deaths = responseJSON2['participants'][partID]['stats']['deaths']
+                minionsKilled = responseJSON2['participants'][partID]['stats']['minionsKilled']
+                assists = responseJSON2['participants'][partID]['stats']['assists']
+                matchDuration = responseJSON2['matchDuration']
+                totalKills = 0
+                for j in range(10):
+                    totalKills += responseJSON2['participants'][j]['stats']['kills']
+                dfAV.loc[len(dfAV)] = [player,ids,ts,kills,deaths,assists,minionsKilled,matchDuration,totalKills]
 
-        i = i-1
-        ids = str(responseJSON['matches'][i]['matchId'])
-        ts = str(responseJSON['matches'][i]['timestamp'])
-        URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/match/"+ids+"?api_key=" + APIKey
-        response = requests.get(URL)
-        responseJSON2  = response.json()
-        partID = checkPartId(responseJSON2,player)
-        assists = responseJSON2['participants'][partID]['stats']['assists']
-        kills = responseJSON2['participants'][partID]['stats']['kills']
-        deaths = responseJSON2['participants'][partID]['stats']['deaths']
-        minionsKilled = responseJSON2['participants'][partID]['stats']['minionsKilled']
-        assists = responseJSON2['participants'][partID]['stats']['assists']
-        matchDuration = responseJSON2['matchDuration']
-        totalKills = 0
-        for j in range(10):
-            totalKills += responseJSON2['participants'][j]['stats']['kills']
-        dfAP.loc[len(dfAP)] = [player,ids,ts,kills,deaths,assists,minionsKilled,matchDuration,totalKills]
+                i = i-1
+                ids = str(responseJSON['matches'][i]['matchId'])
+                ts = str(responseJSON['matches'][i]['timestamp'])
+                URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/match/"+ids+"?api_key=" + APIKey
+                response = requests.get(URL)
+                compteur +=1
+                time.sleep(2)
+                responseJSON2  = response.json()
+                partID = checkPartId(responseJSON2,player)
+                assists = responseJSON2['participants'][partID]['stats']['assists']
+                kills = responseJSON2['participants'][partID]['stats']['kills']
+                deaths = responseJSON2['participants'][partID]['stats']['deaths']
+                minionsKilled = responseJSON2['participants'][partID]['stats']['minionsKilled']
+                assists = responseJSON2['participants'][partID]['stats']['assists']
+                matchDuration = responseJSON2['matchDuration']
+                totalKills = 0
+                for j in range(10):
+                    totalKills += responseJSON2['participants'][j]['stats']['kills']
+                dfAP.loc[len(dfAP)] = [player,ids,ts,kills,deaths,assists,minionsKilled,matchDuration,totalKills]
 
     return dfAV,dfAP
 
@@ -106,8 +119,5 @@ def getMatches(players,region,dfAV,dfAP,tst):
 # df1 = getMatches([challengers[0]],region,APIKey)
 # int(ts)/1000
 # ts_epoch = float(df1.timestamp[0])/1000
-# datetime.fromtimestamp(int(ts)/1000-3600).strftime('%Y-%m-%d %H:%M:%S')
+# datetime.fromtimestamp(int(ts[0])).strftime('%Y-%m-%d %H:%M:%S')
 # ts
-
-
-# df1.to_csv(cmd_folder+'csv/riot.csv')

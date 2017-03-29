@@ -34,18 +34,55 @@ class Api(object):
             print("Going to {} for {} players.".format(c.region,c.rank))
             self.rank = c.rank
             self.region = c.region
+    self.fun = model.function
     print(self)
+
 
   def run(self):
         tweets = get_tweets(self.person,2)
         if self.person == "realDonaldTrump":
             ts = tweets.timestamp[tweets.text.str.contains("Mex")]
+            ts.reset_index(drop = True,inplace= True)
             print(ts)
+        # players = getIDS('challenger','LAN')
         players = getIDS(self.rank,self.region)
         dfAP = pd.DataFrame(columns = ['playerID','matchID','timestamp','kills','deaths','assists','minionsKilled','matchDuration','totalKills'])
         dfAV = pd.DataFrame(columns = ['playerID','matchID','timestamp','kills','deaths','assists','minionsKilled','matchDuration','totalKills'])
-        dfAV,dfAP = getMatches(players[0],self.region)
+        dfAV,dfAP = getMatches(players[0:100],self.region,dfAV,dfAP,ts[0:len(ts)])
+        kdaIND = dfAV.kills + dfAV.assists
+        print(dfAV.shape)
+        print(dfAP.shape)
+        dfAV.deaths[dfAV.deaths ==0] =1
+        kdaAV = ((dfAV.kills+dfAV.assists)/dfAV.deaths).mean()
+        dfAP.deaths[dfAP.deaths ==0] =1
+        kdaAP = ((dfAP.kills+dfAP.assists)/dfAP.deaths).mean()
+        totalKAV = dfAV.totalKills.mean()
+        totalKAP = dfAP.totalKills.mean()
+        minionsKilledAV = (dfAV.minionsKilled/dfAV.matchDuration).mean()
+        minionsKilledAP = (dfAP.minionsKilled/dfAP.matchDuration).mean()
+        durationAV = dfAV.matchDuration.mean()
+        durationAP = dfAP.matchDuration.mean()
+        score = 0
+        if kdaAP > kdaAV:
+            score +=1
+        else:
+            score -=1
+        if minionsKilledAP > minionsKilledAV:
+            score+=1
+        else:
+            score -=1
+        if totalKAP < totalKAV:
+            score +=2
+        else:
+            score -=2
+        if durationAP < durationAV:
+            score +=2
+        else:
+            score -=2
+        print(score/6)
 
 api = Api()
+
 api.interpret(example_api_model)
+
 api.run()
