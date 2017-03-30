@@ -29,7 +29,10 @@ class Api(object):
     for c in model.commands:
         if c.__class__.__name__ == "TwitterCommand":
             print("Check des tweets de : {}".format(c.person))
-            self.person = c.person
+            if c.person== 'putin':
+                self.person = 'PutinRF_Eng'
+            else:
+                self.person = c.person
         else:
             print("Going to {} for {} players.".format(c.region,c.rank))
             self.rank = c.rank
@@ -44,11 +47,16 @@ class Api(object):
             ts = tweets.timestamp[tweets.text.str.contains("Mex")]
             ts.reset_index(drop = True,inplace= True)
             print(ts)
+        if self.person == "PutinRF_Eng":
+            ts = tweets.timestamp
+            ts = ts[28:31]
+            ts.reset_index(drop = True,inplace= True)
+            print(ts)
         # players = getIDS('challenger','LAN')
         players = getIDS(self.rank,self.region)
         dfAP = pd.DataFrame(columns = ['playerID','matchID','timestamp','kills','deaths','assists','minionsKilled','matchDuration','totalKills'])
         dfAV = pd.DataFrame(columns = ['playerID','matchID','timestamp','kills','deaths','assists','minionsKilled','matchDuration','totalKills'])
-        dfAV,dfAP = getMatches(players[0:100],self.region,dfAV,dfAP,ts[0:len(ts)])
+        dfAV,dfAP = getMatches(players[0:5],self.region,dfAV,dfAP,ts[0:len(ts)])
         kdaIND = dfAV.kills + dfAV.assists
         print(dfAV.shape)
         print(dfAP.shape)
@@ -66,20 +74,65 @@ class Api(object):
         if kdaAP > kdaAV:
             score +=1
         else:
-            score -=1
+            if kdaAP < kdaAV:
+                score -=1
         if minionsKilledAP > minionsKilledAV:
             score+=1
         else:
-            score -=1
+            if minionsKilledAP < minionsKilledAV:
+                score -=1
         if totalKAP < totalKAV:
             score +=2
         else:
-            score -=2
+            if totalKAP > totalKAV:
+                score -=2
         if durationAP < durationAV:
             score +=2
         else:
-            score -=2
+            if durationAP > durationAV:
+                score -=2
         print(score/6)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 api = Api()
 
