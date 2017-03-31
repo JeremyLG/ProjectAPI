@@ -91,48 +91,8 @@ class Api(object):
         else:
             if durationAP > durationAV:
                 score -=2
-        print(score/6)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        print("La corrélation entre la performance des joueurs "+ self.rank +" de LoL dans la région "+self.region +
+        "\n et les tweets de " + self.person + " est de : " + str(score/6))
 
 api = Api()
 
