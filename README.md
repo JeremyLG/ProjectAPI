@@ -15,8 +15,10 @@ Est-ce que les tweets de Donald J. Trump influencent les performances des meille
 Le projet a été codé en Python 3.5 sous l'éditeur Atom.io
 
 ```
-pip3 install pprint
+pip3 install textx
 pip3 install requests_oauthlib
+pip3 install pyyaml
+pip3 install pandas
 ```
 
 ## Conditions
